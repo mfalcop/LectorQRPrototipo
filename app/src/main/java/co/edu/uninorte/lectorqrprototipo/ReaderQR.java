@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.webkit.URLUtil;
 
 import com.google.zxing.Result;
 
@@ -51,22 +52,24 @@ public class ReaderQR extends AppCompatActivity implements ZXingScannerView.Resu
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Resultado del scanner");
-        alertDialog.setMessage(result.getText());
-        alertDialog.setPositiveButton("Abrir ruta", new DialogInterface.OnClickListener() {
+        alertDialog.setMessage("Escoja la opción que desee:");
+        alertDialog.setPositiveButton("Abrir rutas", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent in = new Intent(getApplicationContext(), ListaRutas.class);
-                in.putExtra("RUTAS",rutas);
-                startActivity(in);
-                /*Uri uri = Uri.parse(link); // missing 'http://' will cause crashed
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivityForResult(intent,1);*/
-                //TODO:mandarlo a la nueva actividad con el resultado ya separado en un array
+                if( URLUtil.isValidUrl(link)){
+                    Uri uri = Uri.parse(link); // missing 'http://' will cause crashed
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivityForResult(intent,1);
+                }else{
+                    Intent in = new Intent(getApplicationContext(), ListaRutas.class);
+                    in.putExtra("RUTAS",rutas);
+                    startActivity(in);
+                }
 
             }
         });
 
-        alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("Volver", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -86,6 +89,14 @@ public class ReaderQR extends AppCompatActivity implements ZXingScannerView.Resu
 
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
+
+    }
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(ReaderQR.this, MainActivity.class));
+        finish();
 
     }
 }

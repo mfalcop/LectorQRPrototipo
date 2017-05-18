@@ -30,10 +30,13 @@ private String[] mrutas;
         listAdapter.data = mrutas;
         lista.setAdapter(listAdapter);
 
-
-
-
-
+    }
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(ListaRutas.this, MainActivity.class));
+        finish();
 
     }
 
