@@ -23,7 +23,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ReaderQR extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private String link;
-
+    private ArrayList<String> urls= new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +32,9 @@ public class ReaderQR extends AppCompatActivity implements ZXingScannerView.Resu
         setContentView(mScannerView);
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
+
+
+
     }
 
     @Override
@@ -46,9 +49,14 @@ public class ReaderQR extends AppCompatActivity implements ZXingScannerView.Resu
         link = result.getText();
 
         final String[] rutas  = link.split("--"); //Obtiene las rutas por separado del texto que tiene el código
-        //TODO: En un futuro seria un tipo de dato diferente
+        for(int i =0; i<rutas.length;i++){
+            if(i%2==0){
+                urls.add("https://www.google.com/maps/d/u/1/embed?mid=1zFtc12k2dp2_R0TQUK1OjMd_77s");
 
-
+            }else {
+                urls.add("https://www.google.com/maps/d/u/1/embed?mid=1h6g1585A2DKord6-iuY1Qr4Lrfc");
+            }
+        }
 
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Resultado del scanner");
@@ -63,6 +71,7 @@ public class ReaderQR extends AppCompatActivity implements ZXingScannerView.Resu
                 }else{
                     Intent in = new Intent(getApplicationContext(), ListaRutas.class);
                     in.putExtra("RUTAS",rutas);
+                    in.putExtra("URLS", urls);
                     startActivity(in);
                 }
 
